@@ -1,0 +1,29 @@
+- name: Update repositories cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Download OpenVPN
+  ansible.builtin.get_url:
+    url: "{{ ovpn_download_url }}"
+    dest: "{{ ovpn_download_path }}"
+
+- name: Make OpenVPN installer executable
+  ansible.builtin.file:
+    path: "{{ ovpn_download_path }}"
+    mode: "+x"
+
+- name: Run OpenVPN installation script
+  environment:
+    AUTO_INSTALL: y
+    APPROVE_INSTALL: "{{ APPROVE_INSTALL }}"
+    APPROVE_IP: "{{ APPROVE_IP }}"
+    ENDPOINT: "{{ ENDPOINT }}"
+    IPV6_SUPPORT: "{{ IPV6_SUPPORT }}"
+    PORT_CHOICE: "{{ PORT_CHOICE }}"
+    PROTOCOL_CHOICE: "{{ PROTOCOL_CHOICE }}"
+    DNS: "{{ DNS }}"
+    COMPRESSION_ENABLED: "{{ COMPRESSION_ENABLED }}"
+    CUSTOMIZE_ENC: "{{ CUSTOMIZE_ENC }}"
+    CLIENT: "{{ CLIENT }}"
+    PASS: "{{ PASS }}"
+  shell: "{{ ovpn_download_path }}"
